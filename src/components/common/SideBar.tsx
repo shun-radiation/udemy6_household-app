@@ -1,16 +1,50 @@
-import { Box, Drawer } from '@mui/material';
+import {
+  Box,
+  Divider,
+  Drawer,
+  List,
+  ListItem,
+  ListItemButton,
+  ListItemIcon,
+  ListItemText,
+  Toolbar,
+} from '@mui/material';
+import InboxIcon from '@mui/icons-material/MoveToInbox';
+import MailIcon from '@mui/icons-material/Mail';
+
+interface SideBarProps {
+  drawerWidth: number;
+  mobileOpen: boolean;
+  handleDrawerTransitionEnd: () => void;
+  handleDrawerClose: () => void;
+}
 
 const SideBar = ({
   drawerWidth,
   mobileOpen,
   handleDrawerTransitionEnd,
   handleDrawerClose,
-}: {
-  drawerWidth: number;
-  mobileOpen: boolean;
-  handleDrawerTransitionEnd: () => void;
-  handleDrawerClose: () => void;
-}) => {
+}: SideBarProps) => {
+  const drawer = (
+    <div>
+      <Toolbar />
+      <Divider />
+      <List>
+        {['Inbox', 'Starred', 'Send email', 'Drafts'].map((text, index) => (
+          <ListItem key={text} disablePadding>
+            <ListItemButton>
+              <ListItemIcon>
+                {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
+              </ListItemIcon>
+              <ListItemText primary={text} />
+            </ListItemButton>
+          </ListItem>
+        ))}
+      </List>
+      <Divider />
+    </div>
+  );
+
   return (
     <>
       {/* サイドバー */}
