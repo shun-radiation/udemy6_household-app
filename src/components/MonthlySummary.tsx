@@ -30,7 +30,7 @@ const MonthlySummary = () => {
                 fontSize: { xs: '0.8rem', sm: '1rem', md: '1.2rem' },
               }}
             >
-              $30000000000
+              $300
             </Typography>
           </CardContent>
         </Card>
@@ -60,7 +60,8 @@ const MonthlySummary = () => {
                 fontSize: { xs: '0.8rem', sm: '1rem', md: '1.2rem' },
               }}
             >
-              $30000000000000009090909090909909909090909
+              {/* $30000000000000009090909090909909909090909 */}
+              $300
             </Typography>
           </CardContent>
         </Card>
@@ -90,7 +91,7 @@ const MonthlySummary = () => {
                 fontSize: { xs: '0.8rem', sm: '1rem', md: '1.2rem' },
               }}
             >
-              $30000000000
+              $300
             </Typography>
           </CardContent>
         </Card>
