@@ -3,12 +3,17 @@ import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
 import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
 import AccountBalanceIcon from '@mui/icons-material/AccountBalance';
 import { type Transaction } from '../types/index';
+import { financeCalculations } from '../utils/financeCalculation';
+import { ExpandTwoTone } from '@mui/icons-material';
 
 interface MonthlySummaryProps {
   monthlyTransactions: Transaction[];
 }
 const MonthlySummary = ({ monthlyTransactions }: MonthlySummaryProps) => {
-  console.log(monthlyTransactions);
+  // console.log(monthlyTransactions);
+  // const monthlyTotals = financeCalculations(monthlyTransactions);
+  // console.log(monthlyTotals);
+  const { income, expense, balance } = financeCalculations(monthlyTransactions);
 
   return (
     <Grid container spacing={{ xs: 1, sm: 2 }} mb={2}>
@@ -36,7 +41,7 @@ const MonthlySummary = ({ monthlyTransactions }: MonthlySummaryProps) => {
                 fontSize: { xs: '0.8rem', sm: '1rem', md: '1.2rem' },
               }}
             >
-              $300
+              {/* $300 */}¥ {income}
             </Typography>
           </CardContent>
         </Card>
@@ -67,7 +72,7 @@ const MonthlySummary = ({ monthlyTransactions }: MonthlySummaryProps) => {
               }}
             >
               {/* $30000000000000009090909090909909909090909 */}
-              $300
+              {/* $300 */}¥ {expense}
             </Typography>
           </CardContent>
         </Card>
@@ -97,7 +102,7 @@ const MonthlySummary = ({ monthlyTransactions }: MonthlySummaryProps) => {
                 fontSize: { xs: '0.8rem', sm: '1rem', md: '1.2rem' },
               }}
             >
-              $300
+              {/* $300 */}¥ {balance}
             </Typography>
           </CardContent>
         </Card>

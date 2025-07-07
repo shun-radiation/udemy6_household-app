@@ -57,7 +57,7 @@ function App() {
     return transaction.date.startsWith(formatMonth(currentMonth));
   });
 
-  console.log(monthlyTransactions);
+  // console.log(monthlyTransactions);
 
   return (
     <ThemeProvider theme={theme}>
