@@ -4,7 +4,6 @@ import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
 import AccountBalanceIcon from '@mui/icons-material/AccountBalance';
 import { type Transaction } from '../types/index';
 import { financeCalculations } from '../utils/financeCalculation';
-import { ExpandTwoTone } from '@mui/icons-material';
 
 interface MonthlySummaryProps {
   monthlyTransactions: Transaction[];
