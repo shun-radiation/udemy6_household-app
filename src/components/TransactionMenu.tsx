@@ -14,10 +14,10 @@ import {
 //アイコン
 import NotesIcon from '@mui/icons-material/Notes';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
-import FastfoodIcon from '@mui/icons-material/Fastfood';
 import DailySummary from './DailySummary';
 import type { Transaction } from '../types';
 import { formatCurrency } from '../utils/formatting';
+import IconComponents from './IconComponents';
 
 interface TransactionProps {
   dailyTransactions: Transaction[];
@@ -75,8 +75,10 @@ const TransactionMenu = ({
                   <Card
                     sx={{
                       width: '100%',
-                      backgroundColor: (theme) =>
-                        theme.palette.expenseColor.light,
+                      backgroundColor:
+                        transaction.type === 'income'
+                          ? (theme) => theme.palette.incomeColor.light
+                          : (theme) => theme.palette.expenseColor.light,
                     }}
                   >
                     <CardActionArea>
@@ -89,7 +91,7 @@ const TransactionMenu = ({
                         >
                           <Grid size={1}>
                             {/* icon */}
-                            <FastfoodIcon />
+                            {IconComponents[transaction.category]}
                           </Grid>
                           <Grid size={2.5}>
                             <Typography
