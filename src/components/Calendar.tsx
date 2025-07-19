@@ -6,13 +6,21 @@ import '../calendar.css';
 import type { Balance, CalendarContent, Transaction } from '../types';
 import { calculationDailyBalances } from '../utils/financeCalculation';
 import { formatCurrency } from '../utils/formatting';
+import interactionPlugin, {
+  type DateClickArg,
+} from '@fullcalendar/interaction';
 
 interface ClendarProps {
   monthlyTransactions: Transaction[];
   setCurrentMonth: React.Dispatch<React.SetStateAction<Date>>;
+  setCurrentDay: React.Dispatch<React.SetStateAction<string>>;
 }
 
-const Calendar = ({ monthlyTransactions, setCurrentMonth }: ClendarProps) => {
+const Calendar = ({
+  monthlyTransactions,
+  setCurrentMonth,
+  setCurrentDay,
+}: ClendarProps) => {
   // const events = [
   //   {
   //     title: 'Meeting',
@@ -101,17 +109,23 @@ const Calendar = ({ monthlyTransactions, setCurrentMonth }: ClendarProps) => {
     setCurrentMonth(datesetInfo.view.currentStart);
   };
 
+  const handleDateClick = (dateInfo: DateClickArg) => {
+    // console.log(dateInfo);
+    setCurrentDay(dateInfo.dateStr);
+  };
+
   return (
     <div>
       <h1>Demo App</h1>
       <FullCalendar
         locale={jaLocale}
-        plugins={[dayGridPlugin]}
+        plugins={[dayGridPlugin, interactionPlugin]}
         initialView='dayGridMonth'
         weekends={false}
         events={calendarEvents}
         eventContent={renderEventContent}
         datesSet={handleDateSet}
+        dateClick={handleDateClick}
       />
     </div>
   );
