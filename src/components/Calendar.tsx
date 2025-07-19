@@ -3,22 +3,23 @@ import dayGridPlugin from '@fullcalendar/daygrid';
 import jaLocale from '@fullcalendar/core/locales/ja';
 import type { EventContentArg } from '@fullcalendar/core/index.js';
 import '../calendar.css';
-import type { Transaction } from '../types';
+import type { Balance, CalendarContent, Transaction } from '../types';
 import { calculationDailyBalances } from '../utils/financeCalculation';
+import { formatCurrency } from '../utils/formatting';
 
 interface ClendarProps {
   monthlyTransactions: Transaction[];
 }
 const Calendar = ({ monthlyTransactions }: ClendarProps) => {
-  const events = [
-    {
-      title: 'Meeting',
-      start: '2025-07-10',
-      income: 300,
-      expense: 200,
-      balance: 100,
-    },
-  ];
+  // const events = [
+  //   {
+  //     title: 'Meeting',
+  //     start: '2025-07-10',
+  //     income: 300,
+  //     expense: 200,
+  //     balance: 100,
+  //   },
+  // ];
 
   // 月の取引データ
   // const monthlyTransactions = [
@@ -55,11 +56,24 @@ const Calendar = ({ monthlyTransactions }: ClendarProps) => {
   // };
   const dailyBalances = calculationDailyBalances(monthlyTransactions);
   console.log(monthlyTransactions);
-
   console.log(dailyBalances);
 
   // fullcalendar用のイベントを生成する関数
-  const calendarEvents = [{}];
+  const createCalendarEvents = (
+    dailyBalances: Record<string, Balance>
+  ): CalendarContent[] => {
+    return Object.keys(dailyBalances).map((date) => {
+      const { income, expense, balance } = dailyBalances[date];
+      return {
+        start: date,
+        income: formatCurrency(income),
+        expense: formatCurrency(expense),
+        balance: formatCurrency(balance),
+      };
+    });
+  };
+  const calendarEvents = createCalendarEvents(dailyBalances);
+  console.log(calendarEvents);
 
   const renderEventContent = (eventInfo: EventContentArg) => {
     // console.log(eventInfo);
@@ -88,7 +102,7 @@ const Calendar = ({ monthlyTransactions }: ClendarProps) => {
         plugins={[dayGridPlugin]}
         initialView='dayGridMonth'
         weekends={false}
-        events={events}
+        events={calendarEvents}
         eventContent={renderEventContent}
       />
     </div>
