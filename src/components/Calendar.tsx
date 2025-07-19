@@ -1,7 +1,7 @@
 import FullCalendar from '@fullcalendar/react';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import jaLocale from '@fullcalendar/core/locales/ja';
-import type { EventContentArg } from '@fullcalendar/core/index.js';
+import type { DatesSetArg, EventContentArg } from '@fullcalendar/core/index.js';
 import '../calendar.css';
 import type { Balance, CalendarContent, Transaction } from '../types';
 import { calculationDailyBalances } from '../utils/financeCalculation';
@@ -9,8 +9,10 @@ import { formatCurrency } from '../utils/formatting';
 
 interface ClendarProps {
   monthlyTransactions: Transaction[];
+  setCurrentMonth: React.Dispatch<React.SetStateAction<Date>>;
 }
-const Calendar = ({ monthlyTransactions }: ClendarProps) => {
+
+const Calendar = ({ monthlyTransactions, setCurrentMonth }: ClendarProps) => {
   // const events = [
   //   {
   //     title: 'Meeting',
@@ -55,8 +57,8 @@ const Calendar = ({ monthlyTransactions }: ClendarProps) => {
   //   '2025-07-23': { income: 0, expense: 500, balance: -500 },
   // };
   const dailyBalances = calculationDailyBalances(monthlyTransactions);
-  console.log(monthlyTransactions);
-  console.log(dailyBalances);
+  // console.log(monthlyTransactions);
+  // console.log(dailyBalances);
 
   // fullcalendar用のイベントを生成する関数
   const createCalendarEvents = (
@@ -73,7 +75,7 @@ const Calendar = ({ monthlyTransactions }: ClendarProps) => {
     });
   };
   const calendarEvents = createCalendarEvents(dailyBalances);
-  console.log(calendarEvents);
+  // console.log(calendarEvents);
 
   const renderEventContent = (eventInfo: EventContentArg) => {
     // console.log(eventInfo);
@@ -94,6 +96,11 @@ const Calendar = ({ monthlyTransactions }: ClendarProps) => {
     );
   };
 
+  const handleDateSet = (datesetInfo: DatesSetArg) => {
+    // console.log(datesetInfo);
+    setCurrentMonth(datesetInfo.view.currentStart);
+  };
+
   return (
     <div>
       <h1>Demo App</h1>
@@ -104,6 +111,7 @@ const Calendar = ({ monthlyTransactions }: ClendarProps) => {
         weekends={false}
         events={calendarEvents}
         eventContent={renderEventContent}
+        datesSet={handleDateSet}
       />
     </div>
   );

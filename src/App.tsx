@@ -27,6 +27,7 @@ function App() {
     return typeof err === 'object' && err !== null && 'code' in err;
   };
 
+  // firestoreのデータを全て取得
   useEffect(() => {
     const fecheTransactions = async () => {
       try {
@@ -53,6 +54,7 @@ function App() {
     fecheTransactions();
   }, []);
 
+  // ひと月分のデータを取得
   const monthlyTransactions = transactions.filter((transaction) => {
     return transaction.date.startsWith(formatMonth(currentMonth));
   });
@@ -67,7 +69,12 @@ function App() {
           <Route path='/' element={<AppLayout />}>
             <Route
               index
-              element={<Home monthlyTransactions={monthlyTransactions} />}
+              element={
+                <Home
+                  monthlyTransactions={monthlyTransactions}
+                  setCurrentMonth={setCurrentMonth}
+                />
+              }
             />
             <Route path='/report' element={<Report />} />
             <Route path='*' element={<NoMatch />} />
