@@ -9,18 +9,25 @@ import { formatCurrency } from '../utils/formatting';
 import interactionPlugin, {
   type DateClickArg,
 } from '@fullcalendar/interaction';
+import { useTheme } from '@mui/material';
+import { isSameMonth } from 'date-fns';
 
 interface ClendarProps {
   monthlyTransactions: Transaction[];
   setCurrentMonth: React.Dispatch<React.SetStateAction<Date>>;
+  currentDay: string;
   setCurrentDay: React.Dispatch<React.SetStateAction<string>>;
+  today: string;
 }
 
 const Calendar = ({
   monthlyTransactions,
   setCurrentMonth,
+  currentDay,
   setCurrentDay,
+  today,
 }: ClendarProps) => {
+  const theme = useTheme();
   // const events = [
   //   {
   //     title: 'Meeting',
@@ -84,6 +91,13 @@ const Calendar = ({
   };
   const calendarEvents = createCalendarEvents(dailyBalances);
   // console.log(calendarEvents);
+  const backgroundEvent = {
+    start: currentDay,
+    display: 'background',
+    backgroundColor: theme.palette.incomeColor.light,
+  };
+
+  // console.log([...calendarEvents, backgroundEvent]);
 
   const renderEventContent = (eventInfo: EventContentArg) => {
     // console.log(eventInfo);
@@ -104,11 +118,18 @@ const Calendar = ({
     );
   };
 
+  // 月の日付を取得
   const handleDateSet = (datesetInfo: DatesSetArg) => {
-    // console.log(datesetInfo);
-    setCurrentMonth(datesetInfo.view.currentStart);
+    const currentMonth = datesetInfo.view.currentStart;
+    // console.log(datesetInfo.view.currentStart);
+    setCurrentMonth(currentMonth);
+    const todayDate = new Date();
+    if (isSameMonth(todayDate, currentMonth)) {
+      setCurrentDay(today);
+    }
   };
 
+  // 日付を選択した時の処理
   const handleDateClick = (dateInfo: DateClickArg) => {
     // console.log(dateInfo);
     setCurrentDay(dateInfo.dateStr);
@@ -121,8 +142,8 @@ const Calendar = ({
         locale={jaLocale}
         plugins={[dayGridPlugin, interactionPlugin]}
         initialView='dayGridMonth'
-        weekends={false}
-        events={calendarEvents}
+        // weekends={false}
+        events={[...calendarEvents, backgroundEvent]}
         eventContent={renderEventContent}
         datesSet={handleDateSet}
         dateClick={handleDateClick}
