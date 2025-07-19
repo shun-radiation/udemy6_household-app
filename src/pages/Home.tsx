@@ -17,6 +17,7 @@ const Home = ({ monthlyTransactions, setCurrentMonth }: HomeProps) => {
   // console.log(today);
   const [currentDay, setCurrentDay] = useState(today);
 
+  // 一日分のデータを取得
   const dailyTransactions = monthlyTransactions.filter((transaction) => {
     console.log(currentDay);
     return transaction.date === currentDay;
@@ -37,7 +38,10 @@ const Home = ({ monthlyTransactions, setCurrentMonth }: HomeProps) => {
 
       {/* 右側コンテンツ */}
       <Box>
-        <TransactionMenu />
+        <TransactionMenu
+          dailyTransactions={dailyTransactions}
+          currentDay={currentDay}
+        />
         <TransactionForm />
       </Box>
     </Box>
