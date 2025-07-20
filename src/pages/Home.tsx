@@ -58,6 +58,7 @@ const Home = ({ monthlyTransactions, setCurrentMonth }: HomeProps) => {
         <TransactionForm
           onCloseForm={onCloseForm}
           isEntryDrawerOpen={isEntryDrawerOpen}
+          currentDay={currentDay}
         />
       </Box>
     </Box>
