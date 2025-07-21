@@ -10,9 +10,10 @@ import { ThemeProvider } from '@emotion/react';
 import { CssBaseline } from '@mui/material';
 import { type Transaction } from './types/index';
 import { db } from './firebase';
-import { collection, getDocs } from 'firebase/firestore';
+import { addDoc, collection, getDocs } from 'firebase/firestore';
 // import { format } from 'date-fns';
 import { formatMonth } from './utils/formatting';
+import type { Schema } from './validations/schema';
 
 function App() {
   const [transactions, setTransactions] = useState<Transaction[]>([]);
@@ -59,7 +60,25 @@ function App() {
     return transaction.date.startsWith(formatMonth(currentMonth));
   });
 
-  // console.log(monthlyTransactions);
+  const handleSaveTransaction = async (transaction: Schema) => {
+    try {
+      console.log(transaction);
+
+      // firestoreにデータを保存
+      // Add a new document with a generated id.
+      const docRef = await addDoc(collection(db, 'Transactions'), transaction);
+      console.log('Document written with ID: ', docRef.id);
+    } catch (err) {
+      // error
+      if (isFireStoreError(err)) {
+        console.error('firebaseのエラーは', err);
+        console.error('firebaseのエラーメッセージは', err.message);
+        console.error('firebaseのエラーコードは', err.code);
+      } else {
+        console.error('一般的なエラーは', err);
+      }
+    }
+  };
 
   return (
     <ThemeProvider theme={theme}>
@@ -73,6 +92,7 @@ function App() {
                 <Home
                   monthlyTransactions={monthlyTransactions}
                   setCurrentMonth={setCurrentMonth}
+                  onSaveTransaction={handleSaveTransaction}
                 />
               }
             />

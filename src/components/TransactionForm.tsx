@@ -19,7 +19,7 @@ import TrainIcon from '@mui/icons-material/Train';
 import WorkIcon from '@mui/icons-material/Work';
 import AddBusinessIcon from '@mui/icons-material/AddBusiness';
 import SavingsIcon from '@mui/icons-material/Savings';
-import { Controller, useForm } from 'react-hook-form';
+import { Controller, useForm, type SubmitHandler } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useEffect, useState, type JSX } from 'react';
 import type { ExpenseCategory, IncomeCategory } from '../types';
@@ -29,6 +29,7 @@ interface TransactionFormProps {
   onCloseForm: () => void;
   isEntryDrawerOpen: boolean;
   currentDay: string;
+  onSaveTransaction: (transaction: Schema) => Promise<void>;
 }
 
 type IncomeExpense = 'income' | 'expense';
@@ -42,6 +43,7 @@ const TransactionForm = ({
   onCloseForm,
   isEntryDrawerOpen,
   currentDay,
+  onSaveTransaction,
 }: TransactionFormProps) => {
   const formWidth = 320;
 
@@ -98,8 +100,10 @@ const TransactionForm = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentType]);
 
-  const onSubmit = (data: Schema) => {
+  // 送信処理
+  const onSubmit: SubmitHandler<Schema> = (data) => {
     console.log(data);
+    onSaveTransaction(data);
   };
 
   useEffect(() => {
