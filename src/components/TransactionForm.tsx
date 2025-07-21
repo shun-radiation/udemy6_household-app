@@ -20,8 +20,10 @@ import WorkIcon from '@mui/icons-material/Work';
 import AddBusinessIcon from '@mui/icons-material/AddBusiness';
 import SavingsIcon from '@mui/icons-material/Savings';
 import { Controller, useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
 import { useEffect, useState, type JSX } from 'react';
 import type { ExpenseCategory, IncomeCategory } from '../types';
+import { transactionSchema } from '../validations/schema';
 
 interface TransactionFormProps {
   onCloseForm: () => void;
@@ -61,15 +63,23 @@ const TransactionForm = ({
   const [categories, setCategories] = useState(ExpenseCategories);
   // console.log(categories);
 
-  const { control, setValue, watch } = useForm({
+  const {
+    control,
+    setValue,
+    watch,
+    formState: { errors },
+    handleSubmit,
+  } = useForm({
     defaultValues: {
       type: 'expense',
       date: currentDay,
       category: '',
       amount: 0,
-      content: 'aaa',
+      content: '',
     },
+    resolver: zodResolver(transactionSchema),
   });
+  console.log(errors);
 
   // 収支タイプを切り替える関数
   const incomeExpenseToggle = (type: IncomeExpense) => {
@@ -87,6 +97,10 @@ const TransactionForm = ({
     setCategories(newCategories);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentType]);
+
+  const onSubmit = (data) => {
+    console.log(data);
+  };
 
   useEffect(() => {
     setValue('date', currentDay);
@@ -126,7 +140,7 @@ const TransactionForm = ({
         </IconButton>
       </Box>
       {/* フォーム要素 */}
-      <Box component={'form'}>
+      <Box component={'form'} onSubmit={handleSubmit(onSubmit)}>
         <Stack spacing={2}>
           {/* 収支切り替えボタン */}
           <Controller
@@ -182,7 +196,7 @@ const TransactionForm = ({
               return (
                 <TextField {...field} id='カテゴリ' label='カテゴリ' select>
                   {categories.map((category) => (
-                    <MenuItem value={category.label}>
+                    <MenuItem key={category.label} value={category.label}>
                       <ListItemIcon>{category.icon}</ListItemIcon>
                       {category.label}
                     </MenuItem>
@@ -196,7 +210,7 @@ const TransactionForm = ({
             name='amount'
             control={control}
             render={({ field }) => {
-              console.log({ ...field });
+              // console.log({ ...field });
               return (
                 <TextField
                   {...field}

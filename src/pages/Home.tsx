@@ -20,10 +20,10 @@ const Home = ({ monthlyTransactions, setCurrentMonth }: HomeProps) => {
 
   // 一日分のデータを取得
   const dailyTransactions = monthlyTransactions.filter((transaction) => {
-    console.log(currentDay);
+    // console.log(currentDay);
     return transaction.date === currentDay;
   });
-  console.log(dailyTransactions);
+  // console.log(dailyTransactions);
 
   // フォームclose処理
   const onCloseForm = () => {
