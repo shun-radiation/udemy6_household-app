@@ -23,7 +23,7 @@ import { Controller, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useEffect, useState, type JSX } from 'react';
 import type { ExpenseCategory, IncomeCategory } from '../types';
-import { transactionSchema } from '../validations/schema';
+import { transactionSchema, type Schema } from '../validations/schema';
 
 interface TransactionFormProps {
   onCloseForm: () => void;
@@ -69,7 +69,7 @@ const TransactionForm = ({
     watch,
     formState: { errors },
     handleSubmit,
-  } = useForm({
+  } = useForm<Schema>({
     defaultValues: {
       type: 'expense',
       date: currentDay,
@@ -98,7 +98,7 @@ const TransactionForm = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentType]);
 
-  const onSubmit = (data) => {
+  const onSubmit = (data: Schema) => {
     console.log(data);
   };
 
@@ -184,6 +184,8 @@ const TransactionForm = ({
                 InputLabelProps={{
                   shrink: true,
                 }}
+                error={!!errors.date}
+                helperText={errors.date?.message}
               />
             )}
           />
@@ -194,7 +196,14 @@ const TransactionForm = ({
             render={({ field }) => {
               // console.log({ ...field });
               return (
-                <TextField {...field} id='カテゴリ' label='カテゴリ' select>
+                <TextField
+                  {...field}
+                  id='カテゴリ'
+                  label='カテゴリ'
+                  select
+                  error={!!errors.category}
+                  helperText={errors.category?.message}
+                >
                   {categories.map((category) => (
                     <MenuItem key={category.label} value={category.label}>
                       <ListItemIcon>{category.icon}</ListItemIcon>
@@ -221,6 +230,8 @@ const TransactionForm = ({
                   }}
                   label='金額'
                   type='number'
+                  error={!!errors.amount}
+                  helperText={errors.amount?.message}
                 />
               );
             }}
@@ -230,7 +241,15 @@ const TransactionForm = ({
           <Controller
             name='content'
             control={control}
-            render={({ field }) => <TextField label='内容' type='text' />}
+            render={({ field }) => (
+              <TextField
+                {...field}
+                label='内容'
+                type='text'
+                error={!!errors.content}
+                helperText={errors.content?.message}
+              />
+            )}
           />
           {/* 保存ボタン */}
           <Button
