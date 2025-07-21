@@ -66,7 +66,7 @@ const TransactionForm = ({
       type: 'expense',
       date: currentDay,
       category: '',
-      amount: 100,
+      amount: 0,
       content: 'aaa',
     },
   });
@@ -178,7 +178,7 @@ const TransactionForm = ({
             name='category'
             control={control}
             render={({ field }) => {
-              console.log({ ...field });
+              // console.log({ ...field });
               return (
                 <TextField {...field} id='カテゴリ' label='カテゴリ' select>
                   {categories.map((category) => (
@@ -195,7 +195,21 @@ const TransactionForm = ({
           <Controller
             name='amount'
             control={control}
-            render={({ field }) => <TextField label='金額' type='number' />}
+            render={({ field }) => {
+              console.log({ ...field });
+              return (
+                <TextField
+                  {...field}
+                  value={field.value === 0 ? '' : field.value}
+                  onChange={(e) => {
+                    const newValue = parseInt(e.target.value, 10) || 0;
+                    field.onChange(newValue);
+                  }}
+                  label='金額'
+                  type='number'
+                />
+              );
+            }}
           />
 
           {/* 内容 */}
