@@ -20,7 +20,7 @@ import WorkIcon from '@mui/icons-material/Work';
 import AddBusinessIcon from '@mui/icons-material/AddBusiness';
 import SavingsIcon from '@mui/icons-material/Savings';
 import { Controller, useForm } from 'react-hook-form';
-import { useEffect, type JSX } from 'react';
+import { useEffect, useState, type JSX } from 'react';
 import type { ExpenseCategory, IncomeCategory } from '../types';
 
 interface TransactionFormProps {
@@ -58,6 +58,9 @@ const TransactionForm = ({
     { label: 'お小遣い', icon: <SavingsIcon fontSize='small' /> },
   ];
 
+  const [categories, setCategories] = useState(ExpenseCategories);
+  // console.log(categories);
+
   const { control, setValue, watch } = useForm({
     defaultValues: {
       type: 'expense',
@@ -68,12 +71,22 @@ const TransactionForm = ({
     },
   });
 
+  // 収支タイプを切り替える関数
   const incomeExpenseToggle = (type: IncomeExpense) => {
     setValue('type', type);
   };
 
+  // 収支タイプを監視
   const currentType = watch('type');
   // console.log(currentType);
+
+  useEffect(() => {
+    const newCategories =
+      currentType === 'expense' ? ExpenseCategories : IncomeCategories;
+    // console.log(newCategories);
+    setCategories(newCategories);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [currentType]);
 
   useEffect(() => {
     setValue('date', currentDay);
@@ -168,12 +181,12 @@ const TransactionForm = ({
               console.log({ ...field });
               return (
                 <TextField {...field} id='カテゴリ' label='カテゴリ' select>
-                  <MenuItem value={'食費'}>
-                    <ListItemIcon>
-                      <FastfoodIcon />
-                    </ListItemIcon>
-                    食費
-                  </MenuItem>
+                  {categories.map((category) => (
+                    <MenuItem value={category.label}>
+                      <ListItemIcon>{category.icon}</ListItemIcon>
+                      {category.label}
+                    </MenuItem>
+                  ))}
                 </TextField>
               );
             }}
