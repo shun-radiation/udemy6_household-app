@@ -63,11 +63,20 @@ function App() {
   const handleSaveTransaction = async (transaction: Schema) => {
     try {
       console.log(transaction);
-
       // firestoreにデータを保存
       // Add a new document with a generated id.
       const docRef = await addDoc(collection(db, 'Transactions'), transaction);
       console.log('Document written with ID: ', docRef.id);
+
+      const newTransaction = {
+        id: docRef.id,
+        ...transaction,
+      } as Transaction;
+      console.log(newTransaction);
+      setTransactions((prevTransactions) => [
+        ...prevTransactions,
+        newTransaction,
+      ]);
     } catch (err) {
       // error
       if (isFireStoreError(err)) {
