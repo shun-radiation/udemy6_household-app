@@ -23,11 +23,13 @@ interface TransactionProps {
   dailyTransactions: Transaction[];
   currentDay: string;
   handleAddTransactionForm: () => void;
+  onSelectTransaction: (transaction: Transaction) => void;
 }
 const TransactionMenu = ({
   dailyTransactions,
   currentDay,
   handleAddTransactionForm,
+  onSelectTransaction,
 }: TransactionProps) => {
   const menuDrawerWidth = 320;
   return (
@@ -86,6 +88,7 @@ const TransactionMenu = ({
                           ? (theme) => theme.palette.incomeColor.light
                           : (theme) => theme.palette.expenseColor.light,
                     }}
+                    onClick={() => onSelectTransaction(transaction)}
                   >
                     <CardActionArea>
                       <CardContent>
