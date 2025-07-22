@@ -10,7 +10,13 @@ import { ThemeProvider } from '@emotion/react';
 import { CssBaseline } from '@mui/material';
 import { type Transaction } from './types/index';
 import { db } from './firebase';
-import { addDoc, collection, getDocs } from 'firebase/firestore';
+import {
+  addDoc,
+  collection,
+  deleteDoc,
+  doc,
+  getDocs,
+} from 'firebase/firestore';
 // import { format } from 'date-fns';
 import { formatMonth } from './utils/formatting';
 import type { Schema } from './validations/schema';
@@ -18,8 +24,7 @@ import type { Schema } from './validations/schema';
 function App() {
   const [transactions, setTransactions] = useState<Transaction[]>([]);
   const [currentMonth, setCurrentMonth] = useState(new Date());
-  const [selectedTransaction, setSelectedTransaction] =
-    useState<Transaction | null>(null);
+
   // console.log(currentMonth);
   // console.log(format(currentMonth, 'yyyy-MM'));
 
@@ -62,6 +67,7 @@ function App() {
     return transaction.date.startsWith(formatMonth(currentMonth));
   });
 
+  // 取引を保存する処理
   const handleSaveTransaction = async (transaction: Schema) => {
     try {
       console.log(transaction);
@@ -69,7 +75,6 @@ function App() {
       // Add a new document with a generated id.
       const docRef = await addDoc(collection(db, 'Transactions'), transaction);
       console.log('Document written with ID: ', docRef.id);
-
       const newTransaction = {
         id: docRef.id,
         ...transaction,
@@ -79,6 +84,22 @@ function App() {
         ...prevTransactions,
         newTransaction,
       ]);
+    } catch (err) {
+      // error
+      if (isFireStoreError(err)) {
+        console.error('firebaseのエラーは', err);
+        console.error('firebaseのエラーメッセージは', err.message);
+        console.error('firebaseのエラーコードは', err.code);
+      } else {
+        console.error('一般的なエラーは', err);
+      }
+    }
+  };
+
+  const handleDeleteTransaction = async (transactionId: string) => {
+    try {
+      // firestoreのデータ削除
+      await deleteDoc(doc(db, 'Transactions', transactionId));
     } catch (err) {
       // error
       if (isFireStoreError(err)) {
@@ -104,8 +125,7 @@ function App() {
                   monthlyTransactions={monthlyTransactions}
                   setCurrentMonth={setCurrentMonth}
                   onSaveTransaction={handleSaveTransaction}
-                  selectedTransaction={selectedTransaction}
-                  setSelectedTransaction={setSelectedTransaction}
+                  onDeleteTransaction={handleDeleteTransaction}
                 />
               }
             />
