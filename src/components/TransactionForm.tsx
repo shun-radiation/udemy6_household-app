@@ -22,7 +22,7 @@ import SavingsIcon from '@mui/icons-material/Savings';
 import { Controller, useForm, type SubmitHandler } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useEffect, useState, type JSX } from 'react';
-import type { ExpenseCategory, IncomeCategory } from '../types';
+import type { ExpenseCategory, IncomeCategory, Transaction } from '../types';
 import { transactionSchema, type Schema } from '../validations/schema';
 
 interface TransactionFormProps {
@@ -30,6 +30,7 @@ interface TransactionFormProps {
   isEntryDrawerOpen: boolean;
   currentDay: string;
   onSaveTransaction: (transaction: Schema) => Promise<void>;
+  selectedTransaction: Transaction | null;
 }
 
 type IncomeExpense = 'income' | 'expense';
@@ -44,6 +45,7 @@ const TransactionForm = ({
   isEntryDrawerOpen,
   currentDay,
   onSaveTransaction,
+  selectedTransaction,
 }: TransactionFormProps) => {
   const formWidth = 320;
 
@@ -116,6 +118,16 @@ const TransactionForm = ({
       content: '',
     });
   };
+
+  useEffect(() => {
+    if (selectedTransaction) {
+      setValue('type', selectedTransaction.type);
+      setValue('date', selectedTransaction.date);
+      setValue('amount', selectedTransaction.amount);
+      setValue('category', selectedTransaction.category);
+      setValue('content', selectedTransaction.content);
+    }
+  }, [selectedTransaction, setValue]);
 
   useEffect(() => {
     setValue('date', currentDay);

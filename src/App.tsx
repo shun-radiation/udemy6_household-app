@@ -18,6 +18,8 @@ import type { Schema } from './validations/schema';
 function App() {
   const [transactions, setTransactions] = useState<Transaction[]>([]);
   const [currentMonth, setCurrentMonth] = useState(new Date());
+  const [selectedTransaction, setSelectedTransaction] =
+    useState<Transaction | null>(null);
   // console.log(currentMonth);
   // console.log(format(currentMonth, 'yyyy-MM'));
 
@@ -102,6 +104,8 @@ function App() {
                   monthlyTransactions={monthlyTransactions}
                   setCurrentMonth={setCurrentMonth}
                   onSaveTransaction={handleSaveTransaction}
+                  selectedTransaction={selectedTransaction}
+                  setSelectedTransaction={setSelectedTransaction}
                 />
               }
             />
