@@ -100,6 +100,11 @@ function App() {
     try {
       // firestoreのデータ削除
       await deleteDoc(doc(db, 'Transactions', transactionId));
+      const filterdTransactions = transactions.filter(
+        (transaction) => transaction.id !== transactionId
+      );
+      // console.log(filterdTransactions);
+      setTransactions(filterdTransactions);
     } catch (err) {
       // error
       if (isFireStoreError(err)) {
