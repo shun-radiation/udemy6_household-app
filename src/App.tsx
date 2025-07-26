@@ -117,6 +117,20 @@ function App() {
     }
   };
 
+  const handleUpdateTransaction = () => {
+    try {
+    } catch (err) {
+      // error
+      if (isFireStoreError(err)) {
+        console.error('firebaseのエラーは', err);
+        console.error('firebaseのエラーメッセージは', err.message);
+        console.error('firebaseのエラーコードは', err.code);
+      } else {
+        console.error('一般的なエラーは', err);
+      }
+    }
+  };
+
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />

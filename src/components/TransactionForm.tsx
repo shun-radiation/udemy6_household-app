@@ -115,7 +115,24 @@ const TransactionForm = ({
   // 送信処理
   const onSubmit: SubmitHandler<Schema> = (data) => {
     console.log(data);
-    onSaveTransaction(data);
+    if (selectedTransaction) {
+      onUpdateTransaction(data, selectedTransaction.id)
+        .then(() => {
+          console.log('更新しました。');
+          setSelectedTransaction(null);
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+    } else {
+      onSaveTransaction(data)
+        .then(() => {
+          console.log('保存しました。');
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+    }
     reset({
       type: 'expense',
       date: currentDay,
@@ -301,14 +318,14 @@ const TransactionForm = ({
               />
             )}
           />
-          {/* 保存ボタン */}
+          {/* 保存 or 更新 ボタン */}
           <Button
             type='submit'
             variant='contained'
             color={currentType === 'income' ? 'primary' : 'error'}
             fullWidth
           >
-            保存
+            {selectedTransaction ? '更新' : '保存'}
           </Button>
 
           {selectedTransaction && (
