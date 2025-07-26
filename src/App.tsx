@@ -16,6 +16,7 @@ import {
   deleteDoc,
   doc,
   getDocs,
+  updateDoc,
 } from 'firebase/firestore';
 // import { format } from 'date-fns';
 import { formatMonth } from './utils/formatting';
@@ -117,8 +118,14 @@ function App() {
     }
   };
 
-  const handleUpdateTransaction = () => {
+  const handleUpdateTransaction = async (
+    transaction: Schema,
+    transactionId: string
+  ) => {
     try {
+      // firestore更新処理
+      const docRef = doc(db, 'Transactions', transactionId);
+      await updateDoc(docRef, transaction);
     } catch (err) {
       // error
       if (isFireStoreError(err)) {
@@ -145,6 +152,7 @@ function App() {
                   setCurrentMonth={setCurrentMonth}
                   onSaveTransaction={handleSaveTransaction}
                   onDeleteTransaction={handleDeleteTransaction}
+                  onUpdateTransaction={handleUpdateTransaction}
                 />
               }
             />
