@@ -14,6 +14,12 @@ const MonthSelector = ({
   currentMonth,
   setCurrentMonth,
 }: MonthSelectorProps) => {
+  const handleDateChange = (newDate: Date | null) => {
+    console.log(newDate);
+    if (newDate) {
+      setCurrentMonth(newDate);
+    }
+  };
   // 先月ボタン
   const handlePreviosMonth = () => {
     const previosMonth = addMonths(currentMonth, -1);
@@ -52,6 +58,7 @@ const MonthSelector = ({
             label={'年月を選択'}
             sx={{ mx: 2, background: 'white' }}
             value={currentMonth}
+            onChange={handleDateChange}
             views={['year', 'month']}
             format='yyyy/MM'
             // slotProps={{
