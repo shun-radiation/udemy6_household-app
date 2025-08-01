@@ -95,7 +95,7 @@ const TransactionForm = ({
     },
     resolver: zodResolver(transactionSchema),
   });
-  console.log(errors);
+  // console.log(errors);
 
   // 収支タイプを切り替える関数
   const incomeExpenseToggle = (type: IncomeExpense) => {
