@@ -20,6 +20,7 @@ ChartJS.register(
 
 const BarChart = () => {
   const options = {
+    maintainAspectRatio: 0,
     responsive: true,
     plugins: {
       legend: {
@@ -27,7 +28,7 @@ const BarChart = () => {
       },
       title: {
         display: true,
-        text: 'Chart.js Bar Chart',
+        text: '日別収支',
       },
     },
   };
