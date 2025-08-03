@@ -8,6 +8,8 @@ import {
   Tooltip,
   Legend,
 } from 'chart.js';
+import type { Transaction } from '../types';
+import { calculationDailyBalances } from '../utils/financeCalculation';
 
 ChartJS.register(
   CategoryScale,
@@ -18,9 +20,13 @@ ChartJS.register(
   Legend
 );
 
-const BarChart = () => {
+interface BarChartProps {
+  monthlyTransactions: Transaction[];
+}
+
+const BarChart = ({ monthlyTransactions }: BarChartProps) => {
   const options = {
-    maintainAspectRatio: 0,
+    maintainAspectRatio: false,
     responsive: true,
     plugins: {
       legend: {
@@ -32,6 +38,18 @@ const BarChart = () => {
       },
     },
   };
+
+  const dailyBalances = calculationDailyBalances(monthlyTransactions);
+  console.log(dailyBalances);
+  console.log(monthlyTransactions);
+
+  const dateLabels = Object.keys(dailyBalances);
+  console.log(dateLabels);
+
+  const expenseData = dateLabels.map((day) => dailyBalances[day].expense);
+  console.log(expenseData);
+  const incomeData = dateLabels.map((day) => dailyBalances[day].income);
+  console.log(incomeData);
 
   const labels = [
     '2025-08-01',

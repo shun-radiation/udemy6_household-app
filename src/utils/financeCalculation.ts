@@ -1,5 +1,6 @@
 import type { Balance, Transaction } from '../types';
 
+// 日付ごとの収支を計算する関数
 export const financeCalculations = (transactions: Transaction[]): Balance => {
   return transactions.reduce(
     (acc, transaction) => {

@@ -72,6 +72,8 @@ const Calendar = ({
   //   '2025-07-23': { income: 0, expense: 500, balance: -500 },
   // };
   const dailyBalances = calculationDailyBalances(monthlyTransactions);
+  // console.log(dailyBalances);
+
   // console.log(monthlyTransactions);
   // console.log(dailyBalances);
 
