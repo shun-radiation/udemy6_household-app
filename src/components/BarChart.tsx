@@ -10,7 +10,7 @@ import {
 } from 'chart.js';
 import type { Transaction } from '../types';
 import { calculationDailyBalances } from '../utils/financeCalculation';
-import { useTheme } from '@mui/material';
+import { Box, CircularProgress, Typography, useTheme } from '@mui/material';
 
 ChartJS.register(
   CategoryScale,
@@ -23,9 +23,10 @@ ChartJS.register(
 
 interface BarChartProps {
   monthlyTransactions: Transaction[];
+  isLoading: boolean;
 }
 
-const BarChart = ({ monthlyTransactions }: BarChartProps) => {
+const BarChart = ({ monthlyTransactions, isLoading }: BarChartProps) => {
   const theme = useTheme();
   const options = {
     maintainAspectRatio: false,
@@ -68,7 +69,17 @@ const BarChart = ({ monthlyTransactions }: BarChartProps) => {
       },
     ],
   };
-  return <Bar options={options} data={data} />;
+  return (
+    <Box>
+      {isLoading ? (
+        <CircularProgress />
+      ) : monthlyTransactions.length > 0 ? (
+        <Bar options={options} data={data} />
+      ) : (
+        <Typography>データがありません</Typography>
+      )}
+    </Box>
+  );
 };
 
 export default BarChart;

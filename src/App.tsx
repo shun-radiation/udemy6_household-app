@@ -25,6 +25,7 @@ import type { Schema } from './validations/schema';
 function App() {
   const [transactions, setTransactions] = useState<Transaction[]>([]);
   const [currentMonth, setCurrentMonth] = useState(new Date());
+  const [isLoading, setIsLoading] = useState(true);
 
   // console.log(currentMonth);
   // console.log(format(currentMonth, 'yyyy-MM'));
@@ -58,10 +59,15 @@ function App() {
         } else {
           console.error('一般的なエラーは', err);
         }
+      } finally {
+        setIsLoading(false);
       }
     };
     fecheTransactions();
   }, []);
+
+  console.log(transactions);
+  console.log(isLoading);
 
   // ひと月分のデータを取得
   const monthlyTransactions = transactions.filter((transaction) => {
@@ -170,6 +176,7 @@ function App() {
                   currentMonth={currentMonth}
                   setCurrentMonth={setCurrentMonth}
                   monthlyTransactions={monthlyTransactions}
+                  isLoading={isLoading}
                 />
               }
             />
