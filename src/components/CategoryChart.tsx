@@ -1,11 +1,19 @@
 import { Pie } from 'react-chartjs-2';
-import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
+import {
+  Chart as ChartJS,
+  ArcElement,
+  Tooltip,
+  Legend,
+  type ChartData,
+} from 'chart.js';
 import {
   Box,
+  CircularProgress,
   FormControl,
   InputLabel,
   MenuItem,
   Select,
+  Typography,
   type SelectChangeEvent,
 } from '@mui/material';
 import { useState } from 'react';
@@ -28,6 +36,11 @@ const CategoryChart = ({
   ChartJS.register(ArcElement, Tooltip, Legend);
 
   const [selectedType, setSelectedType] = useState<TransactionType>('expense');
+
+  const options = {
+    maintainAspectRatio: false,
+    responsive: true,
+  };
 
   const handleChange = (e: SelectChangeEvent<TransactionType>) => {
     // console.log(e.target.value);
@@ -52,12 +65,16 @@ const CategoryChart = ({
     );
   console.log(categorySums);
 
-  const data = {
-    labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
+  const categoryLabels = Object.keys(categorySums);
+  const categoryValues = Object.values(categorySums);
+  console.log(categoryLabels);
+  console.log(categoryValues);
+
+  const data: ChartData<'pie'> = {
+    labels: categoryLabels,
     datasets: [
       {
-        label: '# of Votes',
-        data: [12, 19, 3, 5, 2, 3],
+        data: categoryValues,
         backgroundColor: [
           'rgba(255, 99, 132, 0.2)',
           'rgba(54, 162, 235, 0.2)',
@@ -80,7 +97,7 @@ const CategoryChart = ({
   };
 
   return (
-    <Box>
+    <>
       <FormControl fullWidth>
         <InputLabel id='type-select-label'>収支の種類</InputLabel>
         <Select
@@ -94,9 +111,23 @@ const CategoryChart = ({
           <MenuItem value='expense'>支出</MenuItem>
         </Select>
       </FormControl>
-
-      <Pie data={data} />
-    </Box>
+      <Box
+        sx={{
+          display: 'flex',
+          flexGrow: 1,
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}
+      >
+        {isLoading ? (
+          <CircularProgress />
+        ) : monthlyTransactions.length > 0 ? (
+          <Pie options={options} data={data} />
+        ) : (
+          <Typography>データがありません</Typography>
+        )}
+      </Box>
+    </>
   );
 };
 
