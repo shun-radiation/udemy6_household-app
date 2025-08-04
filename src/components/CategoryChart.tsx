@@ -1,8 +1,20 @@
 import { Pie } from 'react-chartjs-2';
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
+import { Box, MenuItem, TextField } from '@mui/material';
+import { useState } from 'react';
+import type { TransactionType } from '../types';
 
 const CategoryChart = () => {
   ChartJS.register(ArcElement, Tooltip, Legend);
+
+  const [selectedType, setSelectedType] = useState<TransactionType>('expense');
+
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
+    // console.log(e.target.value);
+    setSelectedType(e.target.value as TransactionType);
+  };
 
   const data = {
     labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
@@ -32,9 +44,19 @@ const CategoryChart = () => {
   };
 
   return (
-    <>
+    <Box>
+      <TextField
+        select
+        fullWidth
+        value={selectedType}
+        onChange={handleChange}
+        label='収支の種類'
+      >
+        <MenuItem value={'income'}>収入</MenuItem>
+        <MenuItem value={'expense'}>支出</MenuItem>
+      </TextField>
       <Pie data={data} />
-    </>
+    </Box>
   );
 };
 
