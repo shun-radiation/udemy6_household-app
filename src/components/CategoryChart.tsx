@@ -9,9 +9,22 @@ import {
   type SelectChangeEvent,
 } from '@mui/material';
 import { useState } from 'react';
-import type { TransactionType } from '../types';
+import type {
+  ExpenseCategory,
+  IncomeCategory,
+  Transaction,
+  TransactionType,
+} from '../types';
 
-const CategoryChart = () => {
+interface CategoryChartProps {
+  monthlyTransactions: Transaction[];
+  isLoading: boolean;
+}
+
+const CategoryChart = ({
+  monthlyTransactions,
+  isLoading,
+}: CategoryChartProps) => {
   ChartJS.register(ArcElement, Tooltip, Legend);
 
   const [selectedType, setSelectedType] = useState<TransactionType>('expense');
@@ -20,6 +33,24 @@ const CategoryChart = () => {
     // console.log(e.target.value);
     setSelectedType(e.target.value as TransactionType);
   };
+
+  const categorySums = monthlyTransactions
+    .filter((transaction) => transaction.type === selectedType)
+    .reduce<Record<IncomeCategory | ExpenseCategory, number>>(
+      (acc, transaction) => {
+        if (!acc[transaction.category]) {
+          acc[transaction.category] = 0;
+        }
+        acc[transaction.category] += transaction.amount;
+        return acc;
+        // {
+        //   "食費":2000,
+        //   "日用品":300,
+        // }
+      },
+      {} as Record<IncomeCategory | ExpenseCategory, number>
+    );
+  console.log(categorySums);
 
   const data = {
     labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],

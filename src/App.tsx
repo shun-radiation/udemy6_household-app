@@ -66,8 +66,8 @@ function App() {
     fecheTransactions();
   }, []);
 
-  console.log(transactions);
-  console.log(isLoading);
+  // console.log(transactions);
+  // console.log(isLoading);
 
   // ひと月分のデータを取得
   const monthlyTransactions = transactions.filter((transaction) => {
