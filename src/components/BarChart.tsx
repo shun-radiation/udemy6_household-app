@@ -70,7 +70,14 @@ const BarChart = ({ monthlyTransactions, isLoading }: BarChartProps) => {
     ],
   };
   return (
-    <Box>
+    <Box
+      sx={{
+        display: 'flex',
+        flexGrow: 1,
+        alignItems: 'center',
+        justifyContent: 'center',
+      }}
+    >
       {isLoading ? (
         <CircularProgress />
       ) : monthlyTransactions.length > 0 ? (
