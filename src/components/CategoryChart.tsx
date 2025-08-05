@@ -14,6 +14,7 @@ import {
   MenuItem,
   Select,
   Typography,
+  useTheme,
   type SelectChangeEvent,
 } from '@mui/material';
 import { useState } from 'react';
@@ -35,6 +36,7 @@ const CategoryChart = ({
 }: CategoryChartProps) => {
   ChartJS.register(ArcElement, Tooltip, Legend);
 
+  const theme = useTheme();
   const [selectedType, setSelectedType] = useState<TransactionType>('expense');
 
   const options = {
@@ -69,6 +71,21 @@ const CategoryChart = ({
   const categoryValues = Object.values(categorySums);
   console.log(categoryLabels);
   console.log(categoryValues);
+
+  const incomeCategoryColor: Record<IncomeCategory, string> = {
+    給与: theme.palette.incomeCategoryColor.給与,
+    副収入: theme.palette.incomeCategoryColor.副収入,
+    お小遣い: theme.palette.incomeCategoryColor.お小遣い,
+  };
+
+  const expenseCategoryColor: Record<ExpenseCategory, string> = {
+    食費: theme.palette.expenseCategoryColor.食費,
+    日用品: theme.palette.expenseCategoryColor.日用品,
+    住居費: theme.palette.expenseCategoryColor.住居費,
+    交際費: theme.palette.expenseCategoryColor.交際費,
+    娯楽: theme.palette.expenseCategoryColor.娯楽,
+    交通費: theme.palette.expenseCategoryColor.交通費,
+  };
 
   const data: ChartData<'pie'> = {
     labels: categoryLabels,
