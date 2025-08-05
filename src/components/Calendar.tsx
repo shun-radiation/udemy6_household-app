@@ -149,6 +149,7 @@ const Calendar = ({
         eventContent={renderEventContent}
         datesSet={handleDateSet}
         dateClick={handleDateClick}
+        height={'800px'}
       />
     </div>
   );
