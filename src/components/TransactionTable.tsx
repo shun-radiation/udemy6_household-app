@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { alpha } from '@mui/material/styles';
+import { alpha, useTheme } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
@@ -20,6 +20,9 @@ import Switch from '@mui/material/Switch';
 import DeleteIcon from '@mui/icons-material/Delete';
 import FilterListIcon from '@mui/icons-material/FilterList';
 import { visuallyHidden } from '@mui/utils';
+import type { Transaction } from '../types';
+import { financeCalculations } from '../utils/financeCalculation';
+import { Grid } from '@mui/material';
 
 interface Data {
   id: number;
@@ -128,7 +131,7 @@ const headCells: readonly HeadCell[] = [
   },
 ];
 
-interface EnhancedTableProps {
+interface TransactionTableHeadProps {
   numSelected: number;
   onRequestSort: (
     event: React.MouseEvent<unknown>,
@@ -140,7 +143,8 @@ interface EnhancedTableProps {
   rowCount: number;
 }
 
-function EnhancedTableHead(props: EnhancedTableProps) {
+// テーブルヘッド
+function TransactionTableHead(props: TransactionTableHeadProps) {
   const {
     onSelectAllClick,
     order,
@@ -193,10 +197,13 @@ function EnhancedTableHead(props: EnhancedTableProps) {
     </TableHead>
   );
 }
-interface EnhancedTableToolbarProps {
+
+interface TransactionTableToolbarProps {
   numSelected: number;
 }
-function EnhancedTableToolbar(props: EnhancedTableToolbarProps) {
+
+// ツールバー
+function TransactionTableToolbar(props: TransactionTableToolbarProps) {
   const { numSelected } = props;
   return (
     <Toolbar
@@ -249,7 +256,30 @@ function EnhancedTableToolbar(props: EnhancedTableToolbarProps) {
     </Toolbar>
   );
 }
-const TransactionTable = () => {
+
+// テーブル上部の月間の収入・支出・残高を表示するためのコンポーネント
+interface FinancialItemProps {
+  title: string;
+  value: number;
+  color: string;
+}
+const FinancialItem = ({ title, value, color }: FinancialItemProps) => {
+  return (
+    <Grid>
+      <Typography>{title}</Typography>
+      <Typography sx={{ color }}>¥ {value}</Typography>
+    </Grid>
+  );
+};
+
+// =======================================================
+// 本体
+// =======================================================
+interface TransactionTableProps {
+  monthlyTransactions: Transaction[];
+}
+const TransactionTable = ({ monthlyTransactions }: TransactionTableProps) => {
+  const theme = useTheme();
   const [order, setOrder] = React.useState<Order>('asc');
   const [orderBy, setOrderBy] = React.useState<keyof Data>('calories');
   const [selected, setSelected] = React.useState<readonly number[]>([]);
@@ -321,17 +351,41 @@ const TransactionTable = () => {
     [order, orderBy, page, rowsPerPage]
   );
 
+  const { income, expense, balance } = financeCalculations(monthlyTransactions);
+  // console.log({ income, expense, balance });
+
   return (
     <Box sx={{ width: '100%' }}>
       <Paper sx={{ width: '100%', mb: 2 }}>
-        <EnhancedTableToolbar numSelected={selected.length} />
+        <Grid container>
+          <FinancialItem
+            title={'収入'}
+            value={income}
+            color={theme.palette.incomeColor.main}
+          />
+          <FinancialItem
+            title={'支出'}
+            value={expense}
+            color={theme.palette.expenseColor.main}
+          />
+          <FinancialItem
+            title={'残高'}
+            value={balance}
+            color={theme.palette.balanceColor.main}
+          />
+        </Grid>
+        {/* ツールバー */}
+        <TransactionTableToolbar numSelected={selected.length} />
+
+        {/* 取引一覧 */}
         <TableContainer>
           <Table
             sx={{ minWidth: 750 }}
             aria-labelledby='tableTitle'
             size={dense ? 'small' : 'medium'}
           >
-            <EnhancedTableHead
+            {/* テーブルヘッド */}
+            <TransactionTableHead
               numSelected={selected.length}
               order={order}
               orderBy={orderBy}
@@ -339,10 +393,12 @@ const TransactionTable = () => {
               onRequestSort={handleRequestSort}
               rowCount={rows.length}
             />
+            {/* テーブルボディ */}
             <TableBody>
               {visibleRows.map((row, index) => {
                 const isItemSelected = selected.includes(row.id);
-                const labelId = `enhanced-table-checkbox-${index}`;
+                // const labelId = `enhanced-table-checkbox-${index}`;
+                const labelId = `transaction-table-checkbox-${index}`;
 
                 return (
                   <TableRow
