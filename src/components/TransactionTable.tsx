@@ -23,6 +23,7 @@ import { visuallyHidden } from '@mui/utils';
 import type { Transaction } from '../types';
 import { financeCalculations } from '../utils/financeCalculation';
 import { Grid } from '@mui/material';
+import { formatCurrency } from '../utils/formatting';
 
 interface Data {
   id: number;
@@ -265,9 +266,21 @@ interface FinancialItemProps {
 }
 const FinancialItem = ({ title, value, color }: FinancialItemProps) => {
   return (
-    <Grid>
-      <Typography>{title}</Typography>
-      <Typography sx={{ color }}>¥ {value}</Typography>
+    <Grid size={4} textAlign={'center'}>
+      <Typography variant='subtitle1' component={'div'}>
+        {title}
+      </Typography>
+      <Typography
+        fontWeight={'fontWeightBold'}
+        sx={{
+          color,
+          fontSize: { xs: '0.8rem', sm: '1rem', md: '1.2rem' },
+          wordBreak: 'break-word',
+        }}
+        component={'span'}
+      >
+        ¥ {formatCurrency(value)}
+      </Typography>
     </Grid>
   );
 };
@@ -357,7 +370,7 @@ const TransactionTable = ({ monthlyTransactions }: TransactionTableProps) => {
   return (
     <Box sx={{ width: '100%' }}>
       <Paper sx={{ width: '100%', mb: 2 }}>
-        <Grid container>
+        <Grid container sx={{ borderBottom: '1px solid rgba(224,224,224,1)' }}>
           <FinancialItem
             title={'収入'}
             value={income}
