@@ -8,7 +8,6 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TablePagination from '@mui/material/TablePagination';
 import TableRow from '@mui/material/TableRow';
-import TableSortLabel from '@mui/material/TableSortLabel';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import Paper from '@mui/material/Paper';
@@ -18,8 +17,6 @@ import Tooltip from '@mui/material/Tooltip';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Switch from '@mui/material/Switch';
 import DeleteIcon from '@mui/icons-material/Delete';
-import FilterListIcon from '@mui/icons-material/FilterList';
-import { visuallyHidden } from '@mui/utils';
 import type { Transaction } from '../types';
 import { financeCalculations } from '../utils/financeCalculation';
 import { Grid } from '@mui/material';
@@ -173,7 +170,7 @@ function TransactionTableHead(props: TransactionTableHeadProps) {
             }}
           />
         </TableCell>
-        {headCells.map((headCell) => (
+        {/* {headCells.map((headCell) => (
           <TableCell
             key={headCell.id}
             align={headCell.numeric ? 'right' : 'left'}
@@ -193,7 +190,12 @@ function TransactionTableHead(props: TransactionTableHeadProps) {
               ) : null}
             </TableSortLabel>
           </TableCell>
-        ))}
+        ))} */}
+
+        <TableCell align='left'>日付</TableCell>
+        <TableCell align='left'>カテゴリ</TableCell>
+        <TableCell align='left'>金額</TableCell>
+        <TableCell align='left'>内容</TableCell>
       </TableRow>
     </TableHead>
   );
@@ -238,19 +240,13 @@ function TransactionTableToolbar(props: TransactionTableToolbarProps) {
           id='tableTitle'
           component='div'
         >
-          Nutrition
+          月の収支
         </Typography>
       )}
-      {numSelected > 0 ? (
+      {numSelected > 0 && (
         <Tooltip title='Delete'>
           <IconButton>
             <DeleteIcon />
-          </IconButton>
-        </Tooltip>
-      ) : (
-        <Tooltip title='Filter list'>
-          <IconButton>
-            <FilterListIcon />
           </IconButton>
         </Tooltip>
       )}
@@ -356,13 +352,15 @@ const TransactionTable = ({ monthlyTransactions }: TransactionTableProps) => {
   const emptyRows =
     page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length) : 0;
 
-  const visibleRows = React.useMemo(
-    () =>
-      [...rows]
-        .sort(getComparator(order, orderBy))
-        .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage),
-    [order, orderBy, page, rowsPerPage]
-  );
+  const visibleRows = React.useMemo(() => {
+    const copyMonthlyTransactions = [...monthlyTransactions];
+    return copyMonthlyTransactions.slice(
+      page * rowsPerPage,
+      page * rowsPerPage + rowsPerPage
+    );
+  }, [monthlyTransactions, page, rowsPerPage]);
+  console.log(rows);
+  console.log(visibleRows);
 
   const { income, expense, balance } = financeCalculations(monthlyTransactions);
   // console.log({ income, expense, balance });
@@ -370,6 +368,7 @@ const TransactionTable = ({ monthlyTransactions }: TransactionTableProps) => {
   return (
     <Box sx={{ width: '100%' }}>
       <Paper sx={{ width: '100%', mb: 2 }}>
+        {/* 収支表示エリア */}
         <Grid container sx={{ borderBottom: '1px solid rgba(224,224,224,1)' }}>
           <FinancialItem
             title={'収入'}
@@ -387,6 +386,7 @@ const TransactionTable = ({ monthlyTransactions }: TransactionTableProps) => {
             color={theme.palette.balanceColor.main}
           />
         </Grid>
+
         {/* ツールバー */}
         <TransactionTableToolbar numSelected={selected.length} />
 
@@ -404,9 +404,9 @@ const TransactionTable = ({ monthlyTransactions }: TransactionTableProps) => {
               orderBy={orderBy}
               onSelectAllClick={handleSelectAllClick}
               onRequestSort={handleRequestSort}
-              rowCount={rows.length}
+              rowCount={monthlyTransactions.length}
             />
-            {/* テーブルボディ */}
+            {/* テーブルボディ・取引内容 */}
             <TableBody>
               {visibleRows.map((row, index) => {
                 const isItemSelected = selected.includes(row.id);
