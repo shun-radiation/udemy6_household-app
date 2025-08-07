@@ -103,6 +103,7 @@ function App() {
     }
   };
 
+  // 削除処理
   const handleDeleteTransaction = async (transactionId: string) => {
     try {
       // firestoreのデータ削除
@@ -177,6 +178,7 @@ function App() {
                   setCurrentMonth={setCurrentMonth}
                   monthlyTransactions={monthlyTransactions}
                   isLoading={isLoading}
+                  onDeleteTransaction={handleDeleteTransaction}
                 />
               }
             />

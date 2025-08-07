@@ -58,11 +58,12 @@ function TransactionTableHead(props: TransactionTableHeadProps) {
 
 interface TransactionTableToolbarProps {
   numSelected: number;
+  onDelete: () => void;
 }
 
 // ツールバー
 function TransactionTableToolbar(props: TransactionTableToolbarProps) {
-  const { numSelected } = props;
+  const { numSelected, onDelete } = props;
   return (
     <Toolbar
       sx={[
@@ -100,7 +101,7 @@ function TransactionTableToolbar(props: TransactionTableToolbarProps) {
       )}
       {numSelected > 0 && (
         <Tooltip title='Delete'>
-          <IconButton>
+          <IconButton onClick={onDelete}>
             <DeleteIcon />
           </IconButton>
         </Tooltip>
@@ -141,11 +142,18 @@ const FinancialItem = ({ title, value, color }: FinancialItemProps) => {
 // =======================================================
 interface TransactionTableProps {
   monthlyTransactions: Transaction[];
+  page: number;
+  setPage: React.Dispatch<React.SetStateAction<number>>;
+  onDeleteTransaction: (transactionId: string) => Promise<void>;
 }
-const TransactionTable = ({ monthlyTransactions }: TransactionTableProps) => {
+const TransactionTable = ({
+  monthlyTransactions,
+  page,
+  setPage,
+  onDeleteTransaction,
+}: TransactionTableProps) => {
   const theme = useTheme();
   const [selected, setSelected] = React.useState<readonly string[]>([]);
-  const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
 
   const handleSelectAllClick = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -187,17 +195,26 @@ const TransactionTable = ({ monthlyTransactions }: TransactionTableProps) => {
     setPage(0);
   };
 
+  console.log('selected', selected);
+  // 削除機能
+  const handleDelete = () => {
+    setSelected([]);
+  };
+
   // Avoid a layout jump when reaching the last page with empty rows.
   const emptyRows =
-    page > 0
-      ? Math.max(0, (1 + page) * rowsPerPage - monthlyTransactions.length)
-      : 0;
+    // page > 0
+    // ?
+    Math.max(0, (1 + page) * rowsPerPage - monthlyTransactions.length);
+  // : 0;
 
   const visibleRows = React.useMemo(() => {
     const sortedMonthlyTransactions = [...monthlyTransactions].sort((a, b) =>
       compareDesc(parseISO(a.date), parseISO(b.date))
     );
     console.log(sortedMonthlyTransactions);
+    console.log('page', page);
+
     return sortedMonthlyTransactions.slice(
       page * rowsPerPage,
       page * rowsPerPage + rowsPerPage
@@ -231,7 +248,10 @@ const TransactionTable = ({ monthlyTransactions }: TransactionTableProps) => {
         </Grid>
 
         {/* ツールバー */}
-        <TransactionTableToolbar numSelected={selected.length} />
+        <TransactionTableToolbar
+          numSelected={selected.length}
+          onDelete={handleDelete}
+        />
 
         {/* 取引一覧 */}
         <TableContainer>

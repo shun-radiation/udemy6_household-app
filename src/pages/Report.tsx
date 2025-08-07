@@ -4,12 +4,14 @@ import CategoryChart from '../components/CategoryChart';
 import BarChart from '../components/BarChart';
 import TransactionTable from '../components/TransactionTable';
 import type { Transaction } from '../types';
+import { useState } from 'react';
 
 interface ReportProps {
   currentMonth: Date;
   setCurrentMonth: React.Dispatch<React.SetStateAction<Date>>;
   monthlyTransactions: Transaction[];
   isLoading: boolean;
+  onDeleteTransaction: (transactionId: string) => Promise<void>;
 }
 
 const Report = ({
@@ -17,7 +19,10 @@ const Report = ({
   setCurrentMonth,
   monthlyTransactions,
   isLoading,
+  onDeleteTransaction,
 }: ReportProps) => {
+  const [page, setPage] = useState(0);
+
   const commonPaperStyle = {
     height: '400px',
     display: 'flex',
@@ -30,6 +35,7 @@ const Report = ({
         <MonthSelector
           currentMonth={currentMonth}
           setCurrentMonth={setCurrentMonth}
+          setPage={setPage}
         />
       </Grid>
 
@@ -53,7 +59,12 @@ const Report = ({
         </Paper>
       </Grid>
       <Grid size={12}>
-        <TransactionTable monthlyTransactions={monthlyTransactions} />
+        <TransactionTable
+          monthlyTransactions={monthlyTransactions}
+          page={page}
+          setPage={setPage}
+          onDeleteTransaction={onDeleteTransaction}
+        />
       </Grid>
     </Grid>
   );

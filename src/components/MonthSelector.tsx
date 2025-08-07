@@ -8,11 +8,13 @@ import { addMonths } from 'date-fns';
 interface MonthSelectorProps {
   currentMonth: Date;
   setCurrentMonth: React.Dispatch<React.SetStateAction<Date>>;
+  setPage: React.Dispatch<React.SetStateAction<number>>;
 }
 
 const MonthSelector = ({
   currentMonth,
   setCurrentMonth,
+  setPage,
 }: MonthSelectorProps) => {
   const handleDateChange = (newDate: Date | null) => {
     console.log(newDate);
@@ -25,12 +27,14 @@ const MonthSelector = ({
     const previosMonth = addMonths(currentMonth, -1);
     // console.log(previosMonth);
     setCurrentMonth(previosMonth);
+    setPage(0);
   };
   //次月ボタン
   const handleNextMonth = () => {
     const nextMonth = addMonths(currentMonth, 1);
     // console.log(nextMonth);
     setCurrentMonth(nextMonth);
+    setPage(0);
   };
 
   return (
