@@ -144,7 +144,9 @@ interface TransactionTableProps {
   monthlyTransactions: Transaction[];
   page: number;
   setPage: React.Dispatch<React.SetStateAction<number>>;
-  onDeleteTransaction: (transactionId: string) => Promise<void>;
+  onDeleteTransaction: (
+    transactionIds: string | readonly string[]
+  ) => Promise<void>;
 }
 const TransactionTable = ({
   monthlyTransactions,
@@ -198,6 +200,7 @@ const TransactionTable = ({
   console.log('selected', selected);
   // 削除機能
   const handleDelete = () => {
+    onDeleteTransaction(selected);
     setSelected([]);
   };
 

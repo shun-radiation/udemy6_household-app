@@ -104,15 +104,25 @@ function App() {
   };
 
   // 削除処理
-  const handleDeleteTransaction = async (transactionId: string) => {
+  const handleDeleteTransaction = async (
+    transactionIds: string | readonly string[]
+  ) => {
     try {
-      // firestoreのデータ削除
-      await deleteDoc(doc(db, 'Transactions', transactionId));
-      const filterdTransactions = transactions.filter(
-        (transaction) => transaction.id !== transactionId
-      );
-      // console.log(filterdTransactions);
-      setTransactions(filterdTransactions);
+      // オブジェクト(複数)ならそのまま、単一ならオブジェクト化する。
+      const idsToDelete = Array.isArray(transactionIds)
+        ? transactionIds
+        : [transactionIds];
+      console.log('削除対象', idsToDelete);
+
+      for (const id of idsToDelete) {
+        // firestoreのデータ削除
+        await deleteDoc(doc(db, 'Transactions', id));
+      }
+      // const filterdTransactions = transactions.filter(
+      //   (transaction) => transaction.id !== transactionIds
+      // );
+      // // console.log(filterdTransactions);
+      // setTransactions(filterdTransactions);
     } catch (err) {
       // error
       if (isFireStoreError(err)) {
