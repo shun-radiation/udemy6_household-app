@@ -22,6 +22,7 @@ import { financeCalculations } from '../utils/financeCalculation';
 import { Grid } from '@mui/material';
 import { formatCurrency } from '../utils/formatting';
 import IconComponents from './IconComponents';
+import { compareDesc, parseISO } from 'date-fns';
 
 interface Data {
   id: number;
@@ -339,11 +340,15 @@ const TransactionTable = ({ monthlyTransactions }: TransactionTableProps) => {
 
   // Avoid a layout jump when reaching the last page with empty rows.
   const emptyRows =
-    page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length) : 0;
+    page > 0
+      ? Math.max(0, (1 + page) * rowsPerPage - monthlyTransactions.length)
+      : 0;
 
   const visibleRows = React.useMemo(() => {
-    const copyMonthlyTransactions = [...monthlyTransactions];
-    return copyMonthlyTransactions.slice(
+    const sortedMonthlyTransactions = [...monthlyTransactions].sort((a, b) =>
+      compareDesc(parseISO(a.date), parseISO(b.date))
+    );
+    return sortedMonthlyTransactions.slice(
       page * rowsPerPage,
       page * rowsPerPage + rowsPerPage
     );
@@ -454,10 +459,12 @@ const TransactionTable = ({ monthlyTransactions }: TransactionTableProps) => {
             </TableBody>
           </Table>
         </TableContainer>
+
+        {/* テーブル下部 */}
         <TablePagination
           rowsPerPageOptions={[5, 10, 25]}
           component='div'
-          count={rows.length}
+          count={monthlyTransactions.length}
           rowsPerPage={rowsPerPage}
           page={page}
           onPageChange={handleChangePage}
