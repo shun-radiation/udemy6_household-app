@@ -21,6 +21,7 @@ import type { Transaction } from '../types';
 import { financeCalculations } from '../utils/financeCalculation';
 import { Grid } from '@mui/material';
 import { formatCurrency } from '../utils/formatting';
+import IconComponents from './IconComponents';
 
 interface Data {
   id: number;
@@ -76,18 +77,6 @@ function descendingComparator<T>(a: T, b: T, orderBy: keyof T) {
 }
 
 type Order = 'asc' | 'desc';
-
-function getComparator<Key extends keyof any>(
-  order: Order,
-  orderBy: Key
-): (
-  a: { [key in Key]: number | string },
-  b: { [key in Key]: number | string }
-) => number {
-  return order === 'desc'
-    ? (a, b) => descendingComparator(a, b, orderBy)
-    : (a, b) => -descendingComparator(a, b, orderBy);
-}
 
 interface HeadCell {
   disablePadding: boolean;
@@ -291,7 +280,7 @@ const TransactionTable = ({ monthlyTransactions }: TransactionTableProps) => {
   const theme = useTheme();
   const [order, setOrder] = React.useState<Order>('asc');
   const [orderBy, setOrderBy] = React.useState<keyof Data>('calories');
-  const [selected, setSelected] = React.useState<readonly number[]>([]);
+  const [selected, setSelected] = React.useState<readonly string[]>([]);
   const [page, setPage] = React.useState(0);
   const [dense, setDense] = React.useState(false);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
@@ -307,16 +296,16 @@ const TransactionTable = ({ monthlyTransactions }: TransactionTableProps) => {
 
   const handleSelectAllClick = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.checked) {
-      const newSelected = rows.map((n) => n.id);
+      const newSelected = monthlyTransactions.map((n) => n.id);
       setSelected(newSelected);
       return;
     }
     setSelected([]);
   };
 
-  const handleClick = (event: React.MouseEvent<unknown>, id: number) => {
+  const handleClick = (event: React.MouseEvent<unknown>, id: string) => {
     const selectedIndex = selected.indexOf(id);
-    let newSelected: readonly number[] = [];
+    let newSelected: readonly string[] = [];
 
     if (selectedIndex === -1) {
       newSelected = newSelected.concat(selected, id);
@@ -408,19 +397,19 @@ const TransactionTable = ({ monthlyTransactions }: TransactionTableProps) => {
             />
             {/* テーブルボディ・取引内容 */}
             <TableBody>
-              {visibleRows.map((row, index) => {
-                const isItemSelected = selected.includes(row.id);
+              {visibleRows.map((transaction, index) => {
+                const isItemSelected = selected.includes(transaction.id);
                 // const labelId = `enhanced-table-checkbox-${index}`;
                 const labelId = `transaction-table-checkbox-${index}`;
 
                 return (
                   <TableRow
                     hover
-                    onClick={(event) => handleClick(event, row.id)}
+                    onClick={(event) => handleClick(event, transaction.id)}
                     role='checkbox'
                     aria-checked={isItemSelected}
                     tabIndex={-1}
-                    key={row.id}
+                    key={transaction.id}
                     selected={isItemSelected}
                     sx={{ cursor: 'pointer' }}
                   >
@@ -439,12 +428,17 @@ const TransactionTable = ({ monthlyTransactions }: TransactionTableProps) => {
                       scope='row'
                       padding='none'
                     >
-                      {row.name}
+                      {transaction.date}
                     </TableCell>
-                    <TableCell align='right'>{row.calories}</TableCell>
-                    <TableCell align='right'>{row.fat}</TableCell>
-                    <TableCell align='right'>{row.carbs}</TableCell>
-                    <TableCell align='right'>{row.protein}</TableCell>
+                    <TableCell
+                      align='left'
+                      sx={{ display: 'flex', alignItems: 'center' }}
+                    >
+                      {IconComponents[transaction.category]}
+                      {transaction.category}
+                    </TableCell>
+                    <TableCell align='left'>{transaction.amount}</TableCell>
+                    <TableCell align='left'>{transaction.content}</TableCell>
                   </TableRow>
                 );
               })}
