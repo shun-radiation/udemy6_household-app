@@ -118,11 +118,12 @@ function App() {
         // firestoreのデータ削除
         await deleteDoc(doc(db, 'Transactions', id));
       }
-      // const filterdTransactions = transactions.filter(
-      //   (transaction) => transaction.id !== transactionIds
-      // );
-      // // console.log(filterdTransactions);
-      // setTransactions(filterdTransactions);
+      // リロードなしですぐに画面に反映されるために
+      const filterdTransactions = transactions.filter(
+        (transaction) => !idsToDelete.includes(transaction.id)
+      );
+      // console.log(filterdTransactions);
+      setTransactions(filterdTransactions);
     } catch (err) {
       // error
       if (isFireStoreError(err)) {
