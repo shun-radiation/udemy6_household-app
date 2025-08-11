@@ -59,16 +59,24 @@ const Home = ({
   };
   // フォームopen処理(「内訳を追加」ボタン)
   const handleAddTransactionForm = () => {
-    if (selectedTransaction) {
-      setSelectedTransaction(null);
+    if (isMobile) {
+      setIsDialogOpen(true);
     } else {
-      setIsEntryDrawerOpen((prev) => !prev);
+      if (selectedTransaction) {
+        setSelectedTransaction(null);
+      } else {
+        setIsEntryDrawerOpen((prev) => !prev);
+      }
     }
   };
 
   // 取引が選択された時の処理
   const handleSelectTransaction = (transaction: Transaction) => {
-    setIsEntryDrawerOpen(true);
+    if (isMobile) {
+      setIsDialogOpen(true);
+    } else {
+      setIsEntryDrawerOpen(true);
+    }
     setSelectedTransaction(transaction);
     console.log(transaction);
   };
@@ -122,6 +130,7 @@ const Home = ({
           onUpdateTransaction={onUpdateTransaction}
           isMobile={isMobile}
           isDialogOpen={isDialogOpen}
+          setIsDialogOpen={setIsDialogOpen}
         />
       </Box>
     </Box>
