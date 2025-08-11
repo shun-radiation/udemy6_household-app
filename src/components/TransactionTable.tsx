@@ -15,12 +15,13 @@ import Checkbox from '@mui/material/Checkbox';
 import IconButton from '@mui/material/IconButton';
 import Tooltip from '@mui/material/Tooltip';
 import DeleteIcon from '@mui/icons-material/Delete';
-import type { Transaction } from '../types';
 import { financeCalculations } from '../utils/financeCalculation';
 import { Grid } from '@mui/material';
 import { formatCurrency } from '../utils/formatting';
 import IconComponents from './IconComponents';
 import { compareDesc, parseISO } from 'date-fns';
+import useMonthlyTransactions from '../hooks/useMonthlyTransactions';
+import { useAppContext } from '../context/AppContext';
 
 interface TransactionTableHeadProps {
   numSelected: number;
@@ -141,19 +142,22 @@ const FinancialItem = ({ title, value, color }: FinancialItemProps) => {
 // 本体
 // =======================================================
 interface TransactionTableProps {
-  monthlyTransactions: Transaction[];
+  // monthlyTransactions: Transaction[];
   page: number;
   setPage: React.Dispatch<React.SetStateAction<number>>;
-  onDeleteTransaction: (
-    transactionIds: string | readonly string[]
-  ) => Promise<void>;
+  // onDeleteTransaction: (
+  //   transactionIds: string | readonly string[]
+  // ) => Promise<void>;
 }
 const TransactionTable = ({
-  monthlyTransactions,
+  // monthlyTransactions,
   page,
   setPage,
-  onDeleteTransaction,
-}: TransactionTableProps) => {
+}: // onDeleteTransaction,
+TransactionTableProps) => {
+  const monthlyTransactions = useMonthlyTransactions();
+  const { onDeleteTransaction } = useAppContext();
+
   const theme = useTheme();
   const [selected, setSelected] = React.useState<readonly string[]>([]);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
@@ -167,7 +171,7 @@ const TransactionTable = ({
     setSelected([]);
   };
 
-  const handleClick = (event: React.MouseEvent<unknown>, id: string) => {
+  const handleClick = (id: string) => {
     const selectedIndex = selected.indexOf(id);
     let newSelected: readonly string[] = [];
 
@@ -186,7 +190,7 @@ const TransactionTable = ({
     setSelected(newSelected);
   };
 
-  const handleChangePage = (event: unknown, newPage: number) => {
+  const handleChangePage = (_: any, newPage: number) => {
     setPage(newPage);
   };
 
@@ -279,7 +283,7 @@ const TransactionTable = ({
                 return (
                   <TableRow
                     hover
-                    onClick={(event) => handleClick(event, transaction.id)}
+                    onClick={() => handleClick(transaction.id)}
                     role='checkbox'
                     aria-checked={isItemSelected}
                     tabIndex={-1}

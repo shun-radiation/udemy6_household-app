@@ -1,4 +1,4 @@
-import { Box, useMediaQuery, useTheme } from '@mui/material';
+import { Box } from '@mui/material';
 import MonthlySummary from '../components/MonthlySummary';
 import Calendar from '../components/Calendar';
 import TransactionMenu from '../components/TransactionMenu';
@@ -6,7 +6,6 @@ import TransactionForm from '../components/TransactionForm';
 import { type Transaction } from '../types/index';
 import { useMemo, useState } from 'react';
 import { format } from 'date-fns';
-import type { Schema } from '../validations/schema';
 import type { DateClickArg } from '@fullcalendar/interaction/index.js';
 import { useAppContext } from '../context/AppContext';
 import useMonthlyTransactions from '../hooks/useMonthlyTransactions';
@@ -50,10 +49,9 @@ const Home = () =>
 
     // 一日分のデータを取得
     const dailyTransactions = useMemo(() => {
-      return monthlyTransactions.filter((transaction) => {
-        // console.log(currentDay);
-        transaction.date === currentDay;
-      });
+      return monthlyTransactions.filter(
+        (transaction) => transaction.date === currentDay
+      );
     }, [monthlyTransactions, currentDay]);
     // console.log(dailyTransactions);
 

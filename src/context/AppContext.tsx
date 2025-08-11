@@ -1,8 +1,14 @@
-import { createContext, useContext, useState } from 'react';
+import { createContext, useContext, useState, type ReactNode } from 'react';
 import type { Transaction } from '../types';
 import { useMediaQuery, useTheme } from '@mui/material';
 import type { Schema } from '../validations/schema';
-import { addDoc, collection, deleteDoc, doc } from 'firebase/firestore';
+import {
+  addDoc,
+  collection,
+  deleteDoc,
+  doc,
+  updateDoc,
+} from 'firebase/firestore';
 import { db } from '../firebase';
 import { isFireStoreError } from '../utils/errorHandling';
 

@@ -1,4 +1,3 @@
-import { useEffect, useState } from 'react';
 import { Route, BrowserRouter as Router, Routes } from 'react-router-dom';
 import './App.css';
 import Home from './pages/Home';
@@ -8,21 +7,7 @@ import AppLayout from './components/layout/AppLayout';
 import { theme } from './theme/theme';
 import { ThemeProvider } from '@emotion/react';
 import { CssBaseline } from '@mui/material';
-import { type Transaction } from './types/index';
-import { db } from './firebase';
-import {
-  addDoc,
-  collection,
-  deleteDoc,
-  doc,
-  getDocs,
-  updateDoc,
-} from 'firebase/firestore';
-// import { format } from 'date-fns';
-import { formatMonth } from './utils/formatting';
-import type { Schema } from './validations/schema';
-import { AppContextProvider, useAppContext } from './context/AppContext';
-import { isFireStoreError } from './utils/errorHandling';
+import { AppContextProvider } from './context/AppContext';
 
 function App() {
   // const [transactions, setTransactions] = useState<Transaction[]>([]);
