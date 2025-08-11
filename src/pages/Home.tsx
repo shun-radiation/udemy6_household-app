@@ -34,6 +34,7 @@ const Home = ({
   const [selectedTransaction, setSelectedTransaction] =
     useState<Transaction | null>(null);
   const [isMobileDrawerOpen, setIsMobileDrawerOpen] = useState(false);
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
 
   // ブレイクポイントの設定
   const theme = useTheme();
@@ -49,8 +50,12 @@ const Home = ({
 
   // フォームclose処理
   const onCloseForm = () => {
-    setIsEntryDrawerOpen((prev) => !prev);
     setSelectedTransaction(null);
+    if (isMobile) {
+      setIsDialogOpen((prev) => !prev);
+    } else {
+      setIsEntryDrawerOpen((prev) => !prev);
+    }
   };
   // フォームopen処理(「内訳を追加」ボタン)
   const handleAddTransactionForm = () => {
@@ -116,6 +121,7 @@ const Home = ({
           setSelectedTransaction={setSelectedTransaction}
           onUpdateTransaction={onUpdateTransaction}
           isMobile={isMobile}
+          isDialogOpen={isDialogOpen}
         />
       </Box>
     </Box>
