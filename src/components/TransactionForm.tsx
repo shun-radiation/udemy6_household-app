@@ -30,7 +30,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useContext, useEffect, useState, type JSX } from 'react';
 import type { ExpenseCategory, IncomeCategory, Transaction } from '../types';
 import { transactionSchema, type Schema } from '../validations/schema';
-import { AppContext } from '../context/AppContext';
+import { AppContext, useAppContext } from '../context/AppContext';
 
 interface TransactionFormProps {
   onCloseForm: () => void;
@@ -71,11 +71,14 @@ const TransactionForm = ({
   isDialogOpen,
   setIsDialogOpen,
 }: TransactionFormProps) => {
-  const context = useContext(AppContext);
+  // const context = useContext(AppContext);
+  // console.log('context', context);
+  // if (context) {
+  //   console.log('context.transactions', context.transactions);
+  // }
+  const context = useAppContext();
   console.log('context', context);
-  if (context) {
-    console.log('context.transactions', context.transactions);
-  }
+  console.log('context.transactions', context.transactions);
 
   const formWidth = 320;
 

@@ -1,4 +1,4 @@
-import { createContext, useState } from 'react';
+import { createContext, useContext, useState } from 'react';
 import type { Transaction } from '../types';
 
 interface AppContextType {
@@ -16,4 +16,15 @@ export const AppContextProvider = ({ children }: { children: ReactNode }) => {
       {children}
     </AppContext.Provider>
   );
+};
+
+export const useAppContext = () => {
+  const context = useContext(AppContext);
+  if (!context) {
+    // contextがundefindの場合の処理
+    throw new Error(
+      'グローバルなデータは、プロバイダーの中で取得してください。'
+    );
+  }
+  return context;
 };
