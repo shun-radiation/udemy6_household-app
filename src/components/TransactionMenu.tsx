@@ -18,13 +18,14 @@ import DailySummary from './DailySummary';
 import type { Transaction } from '../types';
 import { formatCurrency } from '../utils/formatting';
 import IconComponents from './IconComponents';
+import { useAppContext } from '../context/AppContext';
 
 interface TransactionProps {
   dailyTransactions: Transaction[];
   currentDay: string;
   handleAddTransactionForm: () => void;
   onSelectTransaction: (transaction: Transaction) => void;
-  isMobile: boolean;
+  // isMobile: boolean;
   isMobileDrawerOpen: boolean;
   handleCloseMobileDrawer: () => void;
 }
@@ -33,10 +34,11 @@ const TransactionMenu = ({
   currentDay,
   handleAddTransactionForm,
   onSelectTransaction,
-  isMobile,
+  // isMobile,
   isMobileDrawerOpen,
   handleCloseMobileDrawer,
 }: TransactionProps) => {
+  const { isMobile } = useAppContext();
   const menuDrawerWidth = 320;
   return (
     <Drawer

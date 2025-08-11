@@ -3,7 +3,7 @@ import dayGridPlugin from '@fullcalendar/daygrid';
 import jaLocale from '@fullcalendar/core/locales/ja';
 import type { DatesSetArg, EventContentArg } from '@fullcalendar/core/index.js';
 import '../calendar.css';
-import type { Balance, CalendarContent, Transaction } from '../types';
+import type { Balance, CalendarContent } from '../types';
 import { calculationDailyBalances } from '../utils/financeCalculation';
 import { formatCurrency } from '../utils/formatting';
 import interactionPlugin, {
@@ -11,10 +11,12 @@ import interactionPlugin, {
 } from '@fullcalendar/interaction';
 import { useTheme } from '@mui/material';
 import { isSameMonth } from 'date-fns';
+import useMonthlyTransactions from '../hooks/useMonthlyTransactions';
+import { useAppContext } from '../context/AppContext';
 
 interface ClendarProps {
-  monthlyTransactions: Transaction[];
-  setCurrentMonth: React.Dispatch<React.SetStateAction<Date>>;
+  // monthlyTransactions: Transaction[];
+  // setCurrentMonth: React.Dispatch<React.SetStateAction<Date>>;
   currentDay: string;
   setCurrentDay: React.Dispatch<React.SetStateAction<string>>;
   today: string;
@@ -22,13 +24,15 @@ interface ClendarProps {
 }
 
 const Calendar = ({
-  monthlyTransactions,
-  setCurrentMonth,
+  // monthlyTransactions,
+  // setCurrentMonth,
   currentDay,
   setCurrentDay,
   today,
   onDateClick,
 }: ClendarProps) => {
+  const monthlyTransactions = useMonthlyTransactions();
+  const { setCurrentMonth } = useAppContext();
   const theme = useTheme();
   // const events = [
   //   {
