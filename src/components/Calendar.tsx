@@ -18,6 +18,7 @@ interface ClendarProps {
   currentDay: string;
   setCurrentDay: React.Dispatch<React.SetStateAction<string>>;
   today: string;
+  onDateClick: (dateInfo: DateClickArg) => void;
 }
 
 const Calendar = ({
@@ -26,6 +27,7 @@ const Calendar = ({
   currentDay,
   setCurrentDay,
   today,
+  onDateClick,
 }: ClendarProps) => {
   const theme = useTheme();
   // const events = [
@@ -131,12 +133,6 @@ const Calendar = ({
     }
   };
 
-  // 日付を選択した時の処理
-  const handleDateClick = (dateInfo: DateClickArg) => {
-    // console.log(dateInfo);
-    setCurrentDay(dateInfo.dateStr);
-  };
-
   return (
     <div>
       <h1>Demo App</h1>
@@ -148,7 +144,7 @@ const Calendar = ({
         events={[...calendarEvents, backgroundEvent]}
         eventContent={renderEventContent}
         datesSet={handleDateSet}
-        dateClick={handleDateClick}
+        dateClick={onDateClick}
         height={'800px'}
       />
     </div>

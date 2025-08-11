@@ -25,6 +25,8 @@ interface TransactionProps {
   handleAddTransactionForm: () => void;
   onSelectTransaction: (transaction: Transaction) => void;
   isMobile: boolean;
+  isMobileDrawerOpen: boolean;
+  handleCloseMobileDrawer: () => void;
 }
 const TransactionMenu = ({
   dailyTransactions,
@@ -32,6 +34,8 @@ const TransactionMenu = ({
   handleAddTransactionForm,
   onSelectTransaction,
   isMobile,
+  isMobileDrawerOpen,
+  handleCloseMobileDrawer,
 }: TransactionProps) => {
   const menuDrawerWidth = 320;
   return (
@@ -56,7 +60,13 @@ const TransactionMenu = ({
       }}
       variant={isMobile ? 'temporary' : 'permanent'}
       anchor={isMobile ? 'bottom' : 'right'}
-      open={true}
+      open={isMobileDrawerOpen}
+      onClose={handleCloseMobileDrawer}
+      slotProps={{
+        root: {
+          keepMounted: true, // Better open performance on mobile.
+        },
+      }}
     >
       <Stack sx={{ height: '100%' }} spacing={2}>
         <Typography fontWeight={'fontWeightBold'}>
