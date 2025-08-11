@@ -21,7 +21,7 @@ import {
 // import { format } from 'date-fns';
 import { formatMonth } from './utils/formatting';
 import type { Schema } from './validations/schema';
-import { AppContextProvider } from './context/AppContext';
+import { AppContextProvider, useAppContext } from './context/AppContext';
 import { isFireStoreError } from './utils/errorHandling';
 
 function App() {
@@ -31,38 +31,6 @@ function App() {
 
   // console.log(currentMonth);
   // console.log(format(currentMonth, 'yyyy-MM'));
-
-  // firestoreのデータを全て取得
-  useEffect(() => {
-    const fecheTransactions = async () => {
-      try {
-        const querySnapshot = await getDocs(collection(db, 'Transactions'));
-        const transactionsData = querySnapshot.docs.map((doc) => {
-          return {
-            ...doc.data(),
-            id: doc.id,
-          } as Transaction;
-        });
-        // console.log(transactionsData);
-        setTransactions(transactionsData);
-      } catch (err) {
-        // error
-        if (isFireStoreError(err)) {
-          console.error('firebaseのエラーは', err);
-          console.error('firebaseのエラーメッセージは', err.message);
-          console.error('firebaseのエラーコードは', err.code);
-        } else {
-          console.error('一般的なエラーは', err);
-        }
-      } finally {
-        setIsLoading(false);
-      }
-    };
-    fecheTransactions();
-  }, []);
-
-  // console.log(transactions);
-  // console.log(isLoading);
 
   // ひと月分のデータを取得
   const monthlyTransactions = transactions.filter((transaction) => {
