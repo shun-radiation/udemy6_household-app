@@ -4,14 +4,17 @@ import { financeCalculations } from '../utils/financeCalculation';
 
 interface DailySummaryProps {
   dailyTransactions: Transaction[];
+  colums: number;
 }
-const DailySummary = ({ dailyTransactions }: DailySummaryProps) => {
+const DailySummary = ({ dailyTransactions, colums }: DailySummaryProps) => {
   const { income, expense, balance } = financeCalculations(dailyTransactions);
+
+  const isThreeColumsLayout = colums === 3;
   return (
     <Box>
       <Grid container spacing={2}>
         {/* 収入 */}
-        <Grid size={6} display={'flex'}>
+        <Grid size={isThreeColumsLayout ? 4 : 6} display={'flex'}>
           <Card
             sx={{ bgcolor: (theme) => theme.palette.grey[100], flexGrow: 1 }}
           >
@@ -33,7 +36,7 @@ const DailySummary = ({ dailyTransactions }: DailySummaryProps) => {
           </Card>
         </Grid>
         {/* 支出 */}
-        <Grid size={6} display={'flex'}>
+        <Grid size={isThreeColumsLayout ? 4 : 6} display={'flex'}>
           <Card
             sx={{ bgcolor: (theme) => theme.palette.grey[100], flexGrow: 1 }}
           >
@@ -55,7 +58,7 @@ const DailySummary = ({ dailyTransactions }: DailySummaryProps) => {
           </Card>
         </Grid>
         {/* 残高 */}
-        <Grid size={12} display={'flex'}>
+        <Grid size={isThreeColumsLayout ? 4 : 12} display={'flex'}>
           <Card
             sx={{ bgcolor: (theme) => theme.palette.grey[100], flexGrow: 1 }}
           >
