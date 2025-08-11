@@ -22,6 +22,7 @@ import {
 import { formatMonth } from './utils/formatting';
 import type { Schema } from './validations/schema';
 import { AppContextProvider } from './context/AppContext';
+import { isFireStoreError } from './utils/errorHandling';
 
 function App() {
   const [transactions, setTransactions] = useState<Transaction[]>([]);
@@ -30,13 +31,6 @@ function App() {
 
   // console.log(currentMonth);
   // console.log(format(currentMonth, 'yyyy-MM'));
-
-  // firestoreエラーかどうかを判定するガード
-  const isFireStoreError = (
-    err: unknown
-  ): err is { code: string; message: string } => {
-    return typeof err === 'object' && err !== null && 'code' in err;
-  };
 
   // firestoreのデータを全て取得
   useEffect(() => {
@@ -137,7 +131,7 @@ function App() {
     }
   };
 
-  // update処理
+  // 変更処理
   const handleUpdateTransaction = async (
     transaction: Schema,
     transactionId: string
