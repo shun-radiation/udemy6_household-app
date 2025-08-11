@@ -24,28 +24,39 @@ interface TransactionProps {
   currentDay: string;
   handleAddTransactionForm: () => void;
   onSelectTransaction: (transaction: Transaction) => void;
+  isMobile: boolean;
 }
 const TransactionMenu = ({
   dailyTransactions,
   currentDay,
   handleAddTransactionForm,
   onSelectTransaction,
+  isMobile,
 }: TransactionProps) => {
   const menuDrawerWidth = 320;
   return (
     <Drawer
       sx={{
-        width: menuDrawerWidth,
+        width: isMobile ? 'auto' : menuDrawerWidth,
         '& .MuiDrawer-paper': {
-          width: menuDrawerWidth,
+          width: isMobile ? 'auto' : menuDrawerWidth,
           boxSizing: 'border-box',
           p: 2,
-          top: 64,
-          height: `calc(100% - 64px)`, // AppBarの高さを引いたビューポートの高さ
+
+          ...(isMobile && {
+            height: '80vh',
+            borderTopRightRadius: 10,
+            borderTopLeftRadius: 10,
+          }),
+          ...(!isMobile && {
+            top: 64,
+            height: `calc(100% - 64px)`, // AppBarの高さを引いたビューポートの高さ
+          }),
         },
       }}
-      variant={'permanent'}
-      anchor={'right'}
+      variant={isMobile ? 'temporary' : 'permanent'}
+      anchor={isMobile ? 'bottom' : 'right'}
+      open={true}
     >
       <Stack sx={{ height: '100%' }} spacing={2}>
         <Typography fontWeight={'fontWeightBold'}>

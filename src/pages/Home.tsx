@@ -1,4 +1,4 @@
-import { Box } from '@mui/material';
+import { Box, useMediaQuery, useTheme } from '@mui/material';
 import MonthlySummary from '../components/MonthlySummary';
 import Calendar from '../components/Calendar';
 import TransactionMenu from '../components/TransactionMenu';
@@ -32,6 +32,11 @@ const Home = ({
   const [isEntryDrawerOpen, setIsEntryDrawerOpen] = useState(false);
   const [selectedTransaction, setSelectedTransaction] =
     useState<Transaction | null>(null);
+
+  // ブレイクポイントの設定
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('lg')); // 1200px(lg)以下かどうかboolean
+  console.log('isMobile', isMobile);
 
   // 一日分のデータを取得
   const dailyTransactions = monthlyTransactions.filter((transaction) => {
@@ -82,6 +87,7 @@ const Home = ({
           currentDay={currentDay}
           handleAddTransactionForm={handleAddTransactionForm}
           onSelectTransaction={handleSelectTransaction}
+          isMobile={isMobile}
         />
         <TransactionForm
           onCloseForm={onCloseForm}
