@@ -27,9 +27,10 @@ import AddBusinessIcon from '@mui/icons-material/AddBusiness';
 import SavingsIcon from '@mui/icons-material/Savings';
 import { Controller, useForm, type SubmitHandler } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useEffect, useState, type JSX } from 'react';
+import { useContext, useEffect, useState, type JSX } from 'react';
 import type { ExpenseCategory, IncomeCategory, Transaction } from '../types';
 import { transactionSchema, type Schema } from '../validations/schema';
+import { AppContext } from '../context/AppContext';
 
 interface TransactionFormProps {
   onCloseForm: () => void;
@@ -70,6 +71,12 @@ const TransactionForm = ({
   isDialogOpen,
   setIsDialogOpen,
 }: TransactionFormProps) => {
+  const context = useContext(AppContext);
+  console.log('context', context);
+  if (context) {
+    console.log('context.transactions', context.transactions);
+  }
+
   const formWidth = 320;
 
   const ExpenseCategories: CategoryItem[] = [
